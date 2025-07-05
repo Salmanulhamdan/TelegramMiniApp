@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AInager WebApp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Home Screen -->
+<div id="home-screen" class="container">
+  <h1>AInager Home</h1>
+  <div class="grid">
+    <div class="card" onclick="showScreen('personal')">Personal Ainager</div>
+    <div class="card" onclick="showScreen('company')">Company Ainager</div>
+    <div class="card" onclick="showScreen('connected')">Connected Ainagers</div>
+    <div class="card" onclick="showScreen('others')">Others</div>
+  </div>
+</div>
+
+<!-- Section Screens -->
+<div id="personal-screen" class="container" style="display:none;">
+  <h2>Personal Ainager</h2>
+  <button class="btn" onclick="showHomeScreen()">Back</button>
+</div>
+
+<div id="company-screen" class="container" style="display:none;">
+  <h2>Company Ainager</h2>
+  <button class="btn" onclick="showHomeScreen()">Back</button>
+</div>
+
+<div id="connected-screen" class="container" style="display:none;">
+  <h2>Connected Ainagers</h2>
+  <ul id="connected-list"></ul>
+  <button class="btn" onclick="showHomeScreen()">Back</button>
+</div>
+
+<div id="others-screen" class="container" style="display:none;">
+  <h2>Other Ainagers</h2>
+  <button class="btn" onclick="showHomeScreen()">Back</button>
+</div>
+
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>
+  eruda.init();
+</script>
+</body>
+</html>

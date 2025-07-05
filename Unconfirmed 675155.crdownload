@@ -1,0 +1,55 @@
+let currentSection = '';
+
+function goToIcons(type) {
+  currentSection = type;
+  document.getElementById("main-screen").style.display = "none";
+  document.getElementById("icon-screen").style.display = "block";
+  document.getElementById("section-title").innerText = `🔹 ${capitalize(type)} Ainager`;
+
+  const icons = {
+    personal: ['📅 Planner', '✍️ Journal', '🧘 Health', '🧠 Learn'],
+    company: ['📄 Tasks', '💬 Feedback', '📊 Reports', '🧭 Strategy'],
+    health: ['🚶 Steps', '🥗 Meals', '💊 Meds', '🛌 Sleep'],
+    mr: ['🏘️ Listings', '📞 Support', '💵 Payments', '📋 Agreements']
+  };
+
+  const [i1, i2, i3, i4] = icons[type] || icons.personal;
+
+  document.getElementById("icon1").innerText = i1.split(" ")[0];
+  document.getElementById("icon2").innerText = i2.split(" ")[0];
+  document.getElementById("icon3").innerText = i3.split(" ")[0];
+  document.getElementById("icon4").innerText = i4.split(" ")[0];
+
+  document.querySelectorAll('.icon-label')[0].innerText = i1.split(" ")[1];
+  document.querySelectorAll('.icon-label')[1].innerText = i2.split(" ")[1];
+  document.querySelectorAll('.icon-label')[2].innerText = i3.split(" ")[1];
+  document.querySelectorAll('.icon-label')[3].innerText = i4.split(" ")[1];
+
+  // All icons open the Telegram bot
+  document.getElementById("icon1").onclick = openBot;
+  document.getElementById("icon2").onclick = openBot;
+  document.getElementById("icon3").onclick = openBot;
+  document.getElementById("icon4").onclick = openBot;
+}
+
+function goBackToMain() {
+  document.getElementById("icon-screen").style.display = "none";
+  document.getElementById("main-screen").style.display = "block";
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function openBot() {
+  if (window.Telegram && Telegram.WebApp) {
+    Telegram.WebApp.openTelegramLink("https://t.me/Muhsin24725bot?start=fromMiniApp");
+  } else {
+    window.open("https://t.me/Muhsin24725bot?start=fromMiniApp", "_blank");
+  }
+}
+
+// Initialize Telegram WebApp
+if (window.Telegram && Telegram.WebApp) {
+  Telegram.WebApp.ready();
+}

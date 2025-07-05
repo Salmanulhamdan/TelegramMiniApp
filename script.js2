@@ -1,0 +1,12 @@
+let tg = window.Telegram.WebApp;
+
+tg.expand();  // expands the Mini App to full height
+tg.MainButton.text = "Submit 🚀";
+tg.MainButton.show();
+
+document.getElementById("send-data").addEventListener("click", () => {
+  tg.sendData(JSON.stringify({
+    message: "Hello from GoDaddy Mini App!",
+    timestamp: new Date().toISOString()
+  }));
+});

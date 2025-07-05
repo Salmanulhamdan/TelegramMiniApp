@@ -1,0 +1,84 @@
+body {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: linear-gradient(135deg, #0a0f1c, #1a2a44);
+  color: #e0e7ff;
+  min-height: 100vh;
+}
+
+.container {
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  color: #00ffcc;
+  text-shadow: 0 0 10px #00ffcc;
+}
+
+.subtitle {
+  margin: 15px 0;
+  font-size: 1.1em;
+  color: #a0bfff;
+}
+
+.input-field {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  margin: 15px 0;
+  background: #1a2a44;
+  color: #e0e7ff;
+  text-align: center;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  background: #00ffcc;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.card {
+  background: rgba(26, 42, 68, 0.8);
+  padding: 15px;
+  border-radius: 15px;
+  border: 1px solid #00ffcc;
+  cursor: pointer;
+}
+
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin: 20px;
+}
+
+.icon-btn {
+  background: #1a2a44;
+  border: 2px solid #00ffcc;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  font-size: 30px;
+  margin: auto;
+}
+
+.icon-label {
+  margin-top: 10px;
+  display: block;
+}
+
+button:hover {
+  background: #00cc99;
+}

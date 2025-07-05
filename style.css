@@ -1,0 +1,179 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #0a0f1c, #1a2a44);
+    font-family: 'Orbitron', sans-serif;
+    color: #e0e7ff;
+    overflow: hidden;
+    min-height: 100vh;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    padding: 20px 10px;
+    box-sizing: border-box;
+}
+h1 {
+    font-size: 2em;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+    animation: pulse 2s infinite;
+    margin-bottom: 20px;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+.card {
+    background: rgba(26, 42, 68, 0.8);
+    border: 1px solid #00ffcc;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #00ffcc;
+}
+.card img {
+    width: 40px;
+    height: 40px;
+    filter: drop-shadow(0 0 5px #00ffcc);
+}
+.card span {
+    display: block;
+    margin-top: 10px;
+    font-size: 1em;
+}
+#icon-screen {
+    display: none;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in;
+    padding: 20px 10px;
+}
+#section-title {
+    font-size: 2em;
+    color: #00ffcc;
+    text-shadow: 0 0 15px #00ffcc, 0 0 30px #00ffcc;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+.icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    justify-items: center;
+    margin-top: 15px;
+    perspective: 1000px;
+}
+.icon-wrapper {
+    position: relative;
+    transition: transform 0.3s;
+}
+.icon-btn {
+    background: rgba(26, 42, 68, 0.9);
+    border: 2px solid #00ffcc;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    font-size: 35px;
+    text-align: center;
+    color: #e0e7ff;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px #00ffcc;
+    transform-style: preserve-3d;
+}
+.icon-btn:hover {
+    transform: scale(1.1) rotateY(20deg);
+    box-shadow: 0 0 20px #00ffcc, 0 0 35px #00cc99;
+    background: rgba(0, 255, 204, 0.2);
+}
+.icon-label {
+    font-size: 1em;
+    color: #a0bfff;
+    text-shadow: 0 0 5px #a0bfff;
+    transition: color 0.3s;
+}
+.icon-wrapper:hover .icon-label {
+    color: #00ffcc;
+    text-shadow: 0 0 8px #00ffcc;
+}
+.back {
+    margin-top: 25px;
+    padding: 10px 20px;
+    background: #00ffcc;
+    border: none;
+    border-radius: 20px;
+    color: #0a0f1c;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+}
+.back:hover {
+    background: #00cc99;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 255, 204, 0.4);
+}
+.dashboard-box {
+    background: rgba(26, 42, 68, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 20px;
+    text-align: left;
+    border: 1px solid #00ffcc;
+    box-shadow: 0 0 12px #00ffcc;
+    animation: slideUp 0.5s ease-out;
+}
+.dashboard-box h3 {
+    color: #00ffcc;
+    margin-bottom: 12px;
+}
+.dashboard-box p, .dashboard-box ul {
+    margin: 8px 0;
+    color: #a0bfff;
+}
+@keyframes pulse {
+    0% { text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc; }
+    50% { text-shadow: 0 0 20px #00ffcc, 0 0 30px #00ffcc; }
+    100% { text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc; }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+@media (max-width: 480px) {
+    h1 { font-size: 1.5em; }
+    .card { height: 120px; padding: 10px; }
+    .card img { width: 30px; height: 30px; }
+    .card span { font-size: 0.9em; }
+    #section-title { font-size: 1.5em; }
+    .icon-btn { width: 80px; height: 80px; line-height: 80px; font-size: 28px; }
+    .icon-label { font-size: 0.9em; }
+    .back { font-size: 0.9em; padding: 8px 15px; }
+}

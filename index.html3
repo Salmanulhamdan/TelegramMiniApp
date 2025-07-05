@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ainager Mini App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- SCREEN 1: MAIN MENU -->
+<div class="screen" id="main-screen">
+  <h1 class="title">Ainager</h1>
+  <div class="card-grid">
+    <div class="card" onclick="goToIcons('personal')">👤<br>Personal Ainager</div>
+    <div class="card" onclick="goToIcons('company')">🏢<br>Company Ainager</div>
+    <div class="card" onclick="goToIcons('health')">💚<br>Health Plus</div>
+    <div class="card" onclick="goToIcons('mr')">🏠<br>MR Properties</div>
+  </div>
+</div>
+
+<!-- SCREEN 2: ICON GRID -->
+<div class="screen" id="icon-screen" style="display: none;">
+  <h2 id="section-title">Ainager Section</h2>
+  <div class="icon-grid">
+    <div class="icon-wrapper">
+      <div class="icon-btn" onclick="goToDashboard()" id="icon1">📅</div>
+      <div class="icon-label">Planner</div>
+    </div>
+    <div class="icon-wrapper">
+      <div class="icon-btn" onclick="goToDashboard()" id="icon2">✍️</div>
+      <div class="icon-label">Journal</div>
+    </div>
+    <div class="icon-wrapper">
+      <div class="icon-btn" onclick="goToDashboard()" id="icon3">🧘</div>
+      <div class="icon-label">Health</div>
+    </div>
+    <div class="icon-wrapper">
+      <div class="icon-btn" onclick="goToDashboard()" id="icon4">🧠</div>
+      <div class="icon-label">Learn</div>
+    </div>
+  </div>
+  <button class="back-btn" onclick="goBackToMain()">← Back</button>
+</div>
+
+<!-- SCREEN 3: DASHBOARD -->
+<div class="screen" id="dashboard-screen" style="display: none;">
+  <h2>📋 Dashboard</h2>
+  <div id="dashboard-content" class="dashboard-box">
+    <p>This dashboard will show Ainager-relevant insights, tasks, and metrics.</p>
+    <ul>
+      <li>✅ Task: Review your week</li>
+      <li>📌 Insight: Strategy review due</li>
+    </ul>
+  </div>
+  <button class="back-btn" onclick="goBackToIcons()">← Back</button>
+</div>
+
+<script src="script2.js"></script>
+</body>
+</html>
