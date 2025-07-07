@@ -1,7 +1,10 @@
+
 // const API_BASE_URL = "https://ainager.com/ainager/";
 // const API_BASE_URL = "http://127.0.0.1:8000/ainager/";
-const API_BASE_URL="https://4cb4-2405-201-f01a-7006-c54d-ea42-20e0-dbb1.ngrok-free.app/ainager/"
-let telegramUserId = null; // This is your global variable
+const API_BASE_URL = "https://4cb4-2405-201-f01a-7006-c54d-ea42-20e0-dbb1.ngrok-free.app/ainager/";
+let telegramUserId = null;
+let userEmail = null;
+let isUserConnected = false;
 
 // Hide all screens
 function hideAllScreens() {
@@ -13,66 +16,262 @@ function hideAllScreens() {
 function showHomeScreen() {
   hideAllScreens();
   document.getElementById("home-screen").style.display = "block";
-  // alert("🏠 Home screen loaded."); // Removed alert
-  console.log("🏠 Home screen loaded."); // Added console log for internal tracking
+  console.log("🏠 Home screen loaded.");
 }
 
 // Show a specific screen
 function showScreen(screenName) {
   hideAllScreens();
   document.getElementById(`${screenName}-screen`).style.display = "block";
-  // alert(`📺 Showing screen: ${screenName}`); // Removed alert
-  console.log(`📺 Showing screen: ${screenName}`); // Added console log
+  console.log(`📺 Showing screen: ${screenName}`);
 
   if (screenName === 'connected') {
     fetchConnectedAinagers();
   }
 }
 
+// Show email entry screen
+function showEmailScreen() {
+  hideAllScreens();
+  document.getElementById("email-screen").style.display = "block";
+  console.log("📧 Email screen loaded.");
+}
+
+// Show OTP verification screen
+function showOTPScreen() {
+  hideAllScreens();
+  document.getElementById("otp-screen").style.display = "block";
+  console.log("🔢 OTP screen loaded.");
+}
+
+// Send OTP to email
+async function sendOTP() {
+  const emailInput = document.getElementById("email-input");
+  const email = emailInput.value.trim();
+  const errorDiv = document.getElementById("email-error");
+  const loadingDiv = document.getElementById("email-loading");
+
+  // Clear previous messages
+  errorDiv.textContent = "";
+  
+  if (!email) {
+    errorDiv.textContent = "Please enter your email address";
+    return;
+  }
+
+  if (!isValidEmail(email)) {
+    errorDiv.textContent = "Please enter a valid email address";
+    return;
+  }
+
+  loadingDiv.style.display = "block";
+  userEmail = email;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}send-otp/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      },
+      body: JSON.stringify({
+        email: email,
+        telegram_id: telegramUserId
+      })
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      console.log("✅ OTP sent successfully");
+      showOTPScreen();
+    } else {
+      errorDiv.textContent = data.message || "Failed to send OTP. Please try again.";
+    }
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    errorDiv.textContent = "Network error. Please check your connection and try again.";
+  } finally {
+    loadingDiv.style.display = "none";
+  }
+}
+
+// Verify OTP
+async function verifyOTP() {
+  const otpInputs = document.querySelectorAll('.otp-input');
+  const otp = Array.from(otpInputs).map(input => input.value).join('');
+  const errorDiv = document.getElementById("otp-error");
+  const loadingDiv = document.getElementById("otp-loading");
+
+  // Clear previous messages
+  errorDiv.textContent = "";
+
+  if (otp.length !== 6) {
+    errorDiv.textContent = "Please enter all 6 digits";
+    return;
+  }
+
+  loadingDiv.style.display = "block";
+
+  try {
+    const response = await fetch(`${API_BASE_URL}verify-otp/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      },
+      body: JSON.stringify({
+        email: userEmail,
+        otp: otp,
+        telegram_id: telegramUserId
+      })
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      console.log("✅ OTP verified successfully");
+      isUserConnected = true;
+      showHomeScreen();
+    } else {
+      errorDiv.textContent = data.message || "Invalid OTP. Please try again.";
+      // Clear OTP inputs
+      otpInputs.forEach(input => input.value = "");
+      otpInputs[0].focus();
+    }
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    errorDiv.textContent = "Network error. Please check your connection and try again.";
+  } finally {
+    loadingDiv.style.display = "none";
+  }
+}
+
+// Resend OTP
+async function resendOTP() {
+  if (!userEmail) {
+    showEmailScreen();
+    return;
+  }
+
+  const errorDiv = document.getElementById("otp-error");
+  errorDiv.textContent = "";
+
+  try {
+    const response = await fetch(`${API_BASE_URL}send-otp/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      },
+      body: JSON.stringify({
+        email: userEmail,
+        telegram_id: telegramUserId
+      })
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      console.log("✅ OTP resent successfully");
+      // Clear OTP inputs
+      const otpInputs = document.querySelectorAll('.otp-input');
+      otpInputs.forEach(input => input.value = "");
+      otpInputs[0].focus();
+    } else {
+      errorDiv.textContent = data.message || "Failed to resend OTP. Please try again.";
+    }
+  } catch (error) {
+    console.error("Error resending OTP:", error);
+    errorDiv.textContent = "Network error. Please check your connection and try again.";
+  }
+}
+
+// Move to next OTP input
+function moveToNext(current, index) {
+  if (current.value.length === 1 && index < 5) {
+    const nextInput = document.querySelectorAll('.otp-input')[index + 1];
+    nextInput.focus();
+  }
+}
+
+// Validate email format
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// Check if user is connected
+async function checkUserConnection() {
+  if (!telegramUserId) {
+    console.warn("No telegram user ID available");
+    showEmailScreen();
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}check-telegram-id/?telegram_id=${telegramUserId}`, {
+      headers: {
+        'ngrok-skip-browser-warning': 'true'
+      }
+    });
+
+    const data = await response.json();
+    
+    if (response.ok && data.exists) {
+      console.log("✅ User is connected");
+      isUserConnected = true;
+      showHomeScreen();
+    } else {
+      console.log("❌ User is not connected");
+      isUserConnected = false;
+      showEmailScreen();
+    }
+  } catch (error) {
+    console.error("Error checking user connection:", error);
+    // Show email screen as fallback
+    showEmailScreen();
+  }
+}
 
 function startAinagerBot(ainagerName) {
-  const botUsername = "theainager_bot"; // replace this with your actual bot username
+  const botUsername = "theainager_bot";
   const url = `https://t.me/${botUsername}?start=connect_${encodeURIComponent(ainagerName)}`;
   window.open(url, "_blank");
   console.log(`📤 Opening bot with parameter: ${ainagerName}`);
 }
+
 // Fetch connected Ainagers from API
 function fetchConnectedAinagers() {
   const list = document.getElementById("connected-list");
-  list.innerHTML = ""; // Clear previous list items
+  list.innerHTML = "";
 
   if (!telegramUserId) {
     list.innerHTML = "<li>User ID not available. Please launch via Telegram.</li>";
-    // alert("❌ No Telegram user ID found."); // Removed alert
-    console.warn("❌ Attempted to fetch connections without telegramUserId."); // Changed to warn
+    console.warn("❌ Attempted to fetch connections without telegramUserId.");
     return;
   }
 
-  // alert(`🔍 Fetching connections for user: ${telegramUserId}`); // Removed alert
-  console.log(`🔍 Fetching connections for user: ${telegramUserId}`); // Added console log
+  console.log(`🔍 Fetching connections for user: ${telegramUserId}`);
 
-  console.log(`${API_BASE_URL}ainager-connections/?user_id=${telegramUserId}`,"API_BASE_URL");
-
-  fetch(`${API_BASE_URL}ainager-connections/?user_id=${telegramUserId}`,{
+  fetch(`${API_BASE_URL}ainager-connections/?user_id=${telegramUserId}`, {
     headers: {
       'ngrok-skip-browser-warning': 'true'
     }
   })
     .then(response => {
-      console.log(`API Response Status: ${response.status}`); // Log status
+      console.log(`API Response Status: ${response.status}`);
       if (!response.ok) {
-        // More specific error message based on status
         throw new Error(`Failed to fetch connections: ${response.status} ${response.statusText}`);
       }
       return response.json();
     })
     .then(data => {
-      // alert("✅ Connection data received from API."); // Removed alert
-      console.log("✅ Connection data received from API:", data); // Added console log
+      console.log("✅ Connection data received from API:", data);
 
       if (!data.connections || data.connections.length === 0) {
         list.innerHTML = "<li>No connected Ainagers found.</li>";
-        console.info("No connections found in API response."); // Info log
+        console.info("No connections found in API response.");
         return;
       }
 
@@ -89,46 +288,39 @@ function fetchConnectedAinagers() {
       
         list.appendChild(card);
       });
-      console.log("Ainagers list populated."); // Log success
+      console.log("Ainagers list populated.");
     })
     .catch(error => {
-      console.error("⚠️ Error fetching connections:", error); // Detailed error log
+      console.error("⚠️ Error fetching connections:", error);
       list.innerHTML = "<li>Error loading connections. Please try again later.</li>";
-      // alert("⚠️ Error fetching Ainager connections."); // Removed alert
     });
 }
 
-// For now, this function just logs the user ID. It could be expanded for other uses.
 function checkTelegramId(userId) {
   console.log("checkTelegramId received:", userId);
 }
 
 function initializeApp() {
   console.log("initializeApp started.");
-  console.log("testing the url params");
-
+  
   const urlParams = new URLSearchParams(window.location.search);
   telegramUserId = urlParams.get('user_id');
-  console.log(userId,"userId");
+  console.log("URL user_id:", telegramUserId);
 
   if (window.Telegram && window.Telegram.WebApp) {
     console.log("Telegram.WebApp object found!");
     window.Telegram.WebApp.ready();
-    // alert("✅ Telegram WebApp is ready."); // Removed alert
-    console.log("✅ Telegram WebApp is ready."); // Log success
+    console.log("✅ Telegram WebApp is ready.");
 
     const initData = window.Telegram.WebApp.initDataUnsafe;
     console.log("initDataUnsafe: ", initData);
 
     if (initData && initData.user) {
       telegramUserId = initData.user.id;
-      // alert(`✅ Telegram User ID retrieved: ${telegramUserId}`); // Removed alert
-      console.log(`✅ Telegram User ID retrieved: ${telegramUserId}`); // Log success
+      console.log(`✅ Telegram User ID retrieved: ${telegramUserId}`);
       checkTelegramId(telegramUserId);
-      console.log("Global telegramUserId set to:", telegramUserId);
     } else {
-      // alert("❌ No Telegram user data found — make sure you're opening via Telegram bot button"); // Removed alert
-      console.error("❌ No Telegram user data in initDataUnsafe. initData:", initData); // Error log
+      console.error("❌ No Telegram user data in initDataUnsafe.");
     }
   } else if (window.TelegramWebviewProxy) {
     console.log("TelegramWebviewProxy object found!");
@@ -152,28 +344,29 @@ function initializeApp() {
         if (userString) {
           const user = JSON.parse(userString);
           telegramUserId = user.id;
-          // alert(`✅ Telegram User ID retrieved (via proxy & URL): ${telegramUserId}`); // Removed alert
-          console.log(`✅ Telegram User ID retrieved (via proxy & URL): ${telegramUserId}`); // Log success
+          console.log(`✅ Telegram User ID retrieved (via proxy & URL): ${telegramUserId}`);
           checkTelegramId(telegramUserId);
-          console.log("Global telegramUserId set to:", telegramUserId);
         } else {
-          // alert("❌ TelegramWebviewProxy found, but no user data in URL initData."); // Removed alert
-          console.error("❌ TelegramWebviewProxy found, but no user data in URL initData. Raw data:", decodedInitData); // Error log
+          console.error("❌ TelegramWebviewProxy found, but no user data in URL initData.");
         }
       } else {
-        // alert("❌ TelegramWebviewProxy found, but no tgWebAppData in URL."); // Removed alert
-        console.error("❌ TelegramWebviewProxy found, but no tgWebAppData in URL."); // Error log
+        console.error("❌ TelegramWebviewProxy found, but no tgWebAppData in URL.");
       }
     } catch (e) {
-      // alert("⚠️ Error parsing initData with TelegramWebviewProxy."); // Removed alert
-      console.error("⚠️ Error parsing initData with TelegramWebviewProxy:", e); // Error log
+      console.error("⚠️ Error parsing initData with TelegramWebviewProxy:", e);
     }
   } else {
-    // alert("❌ Telegram WebApp object not available. Are you in Telegram?"); // Removed alert
-    console.error("❌ Telegram WebApp object (neither Telegram.WebApp nor TelegramWebviewProxy) not available. Ensure you are in Telegram."); // Final fallback error log
+    console.error("❌ Telegram WebApp object not available.");
   }
 
-  showHomeScreen();
+  // Check user connection status after getting telegram user ID
+  if (telegramUserId) {
+    console.log("checking connection")
+    checkUserConnection();
+  } else {
+    // If no telegram user ID, show email screen
+    showEmailScreen();
+  }
 }
 
 // Call initializeApp when page loads

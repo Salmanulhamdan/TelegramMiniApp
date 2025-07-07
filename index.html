@@ -20,6 +20,41 @@
   </div>
 </div>
 
+<!-- Email Entry Screen -->
+<div id="email-screen" class="container" style="display:none;">
+  <h2>Connect Your Account</h2>
+  <p style="text-align: center; margin-bottom: 30px;">Enter your email to connect your AInager account</p>
+  
+  <div class="form-group">
+    <label for="email-input">Email Address</label>
+    <input type="email" id="email-input" placeholder="Enter your email address" required>
+  </div>
+  
+  <button class="btn btn-primary" onclick="sendOTP()">Send OTP</button>
+  <div id="email-error" class="error-message"></div>
+  <div id="email-loading" class="loading" style="display:none;">Sending OTP...</div>
+</div>
+
+<!-- OTP Verification Screen -->
+<div id="otp-screen" class="container" style="display:none;">
+  <h2>Enter OTP</h2>
+  <p style="text-align: center; margin-bottom: 30px;">We've sent a 6-digit code to your email</p>
+  
+  <div class="otp-container">
+    <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 0)">
+    <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 1)">
+    <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 2)">
+    <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 3)">
+    <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 4)">
+    <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 5)">
+  </div>
+  
+  <button class="btn btn-primary" onclick="verifyOTP()">Verify OTP</button>
+  <div class="resend-link" onclick="resendOTP()">Resend OTP</div>
+  <div id="otp-error" class="error-message"></div>
+  <div id="otp-loading" class="loading" style="display:none;">Verifying...</div>
+</div>
+
 <!-- Section Screens -->
 <div id="personal-screen" class="container" style="display:none;">
   <h2>Personal Ainager</h2>
@@ -44,8 +79,8 @@
 
 <script src="script.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/eruda"></script> -->
-<script>
+<!-- <script>
   // eruda.init();
-</script>
+</script> -->
 </body>
 </html>
