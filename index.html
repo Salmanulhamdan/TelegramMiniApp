@@ -4,41 +4,308 @@
   <meta charset="UTF-8">
   <title>AInager WebApp</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 30px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .toggle-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .toggle-buttons button {
+      flex: 1;
+      margin: 0 8px;
+      padding: 12px 0;
+      border: 2px solid #007bff;
+      border-radius: 12px;
+      background-color: #eaf1fb;
+      color: #007bff;
+      font-size: 16px;
+      font-weight: 500;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .toggle-buttons button:hover {
+      background-color: #d2e6ff;
+    }
+
+    .toggle-buttons button.active {
+      background-color: #007bff;
+      color: white;
+    }
+
+    h2 {
+      color: #333;
+      font-size: 18px;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+      text-align: left;
+    }
+
+    .ainager-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      justify-items: center;
+      margin-bottom: 30px;
+    }
+
+    .ainager {
+    width: 130px;
+    height: 130px;
+    border: 2px solid #007bff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+    background-color: #f9fcff;
+    transition: 0.3s;
+    padding: 10px;
+    cursor: pointer;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.2;
+  }
+
+    .ainager:hover {
+      background-color: #e6f0ff;
+      transform: scale(1.05);
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .search-box button {
+      padding: 10px 16px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      font-size: 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .search-box button:hover {
+      background-color: #0056cc;
+    }
+
+    /* Email Entry Screen */
+    .email-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-weight: 500;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056cc;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: #545b62;
+    }
+
+    /* OTP Screen */
+    .otp-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .otp-input {
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      background: white;
+      color: #333;
+      transition: 0.3s;
+    }
+
+    .otp-input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    .resend-link {
+      color: #007bff;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+
+    .resend-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Message Styles */
+    .error-message {
+      color: #dc3545;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .success-message {
+      color: #28a745;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .loading {
+      text-align: center;
+      color: #007bff;
+      font-weight: 500;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      padding: 40px 20px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        padding: 30px 20px;
+      }
+      
+      .ainager-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      
+      .ainager {
+        width: 120px;
+        height: 120px;
+      }
+    }
+  </style>
 </head>
 <body>
-
-<!-- Home Screen -->
-<div id="home-screen" class="container">
-  <h1>AInager Home</h1>
-  <div class="grid">
-    <div class="card" onclick="showScreen('personal')">Personal Ainager</div>
-    <div class="card" onclick="showScreen('company')">Company Ainager</div>
-    <div class="card" onclick="showScreen('connected')">Connected Ainagers</div>
-    <div class="card" onclick="showScreen('others')">Others</div>
-  </div>
-</div>
 
 <!-- Email Entry Screen -->
 <div id="email-screen" class="container" style="display:none;">
   <h2>Connect Your Account</h2>
-  <p style="text-align: center; margin-bottom: 30px;">Enter your email to connect your AInager account</p>
+  <p style="text-align: center; margin-bottom: 30px; color: #666;">Enter your email to connect your AInager account</p>
   
-  <div class="form-group">
-    <label for="email-input">Email Address</label>
-    <input type="email" id="email-input" placeholder="Enter your email address" required>
+  <div class="email-form">
+    <div class="form-group">
+      <label for="email-input">Email Address</label>
+      <input type="email" id="email-input" placeholder="Enter your email address" required>
+    </div>
+    
+    <button class="btn btn-primary" onclick="sendOTP()">Send OTP</button>
+    <div id="email-error" class="error-message"></div>
+    <div id="email-loading" class="loading" style="display:none;">Sending OTP...</div>
   </div>
-  
-  <button class="btn btn-primary" onclick="sendOTP()">Send OTP</button>
-  <div id="email-error" class="error-message"></div>
-  <div id="email-loading" class="loading" style="display:none;">Sending OTP...</div>
 </div>
 
 <!-- OTP Verification Screen -->
 <div id="otp-screen" class="container" style="display:none;">
   <h2>Enter OTP</h2>
-  <p style="text-align: center; margin-bottom: 30px;">We've sent a 6-digit code to your email</p>
+  <p style="text-align: center; margin-bottom: 30px; color: #666;">We've sent a 6-digit code to your email</p>
   
   <div class="otp-container">
     <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 0)">
@@ -55,32 +322,451 @@
   <div id="otp-loading" class="loading" style="display:none;">Verifying...</div>
 </div>
 
-<!-- Section Screens -->
-<div id="personal-screen" class="container" style="display:none;">
-  <h2>Personal Ainager</h2>
-  <button class="btn" onclick="showHomeScreen()">Back</button>
+<!-- Main App Screen -->
+<div id="main-screen" class="container" style="display:none;">
+  <div class="toggle-buttons">
+    <button id="personal-btn" class="active" onclick="switchTab('personal')">Personal</button>
+    <button id="professional-btn" onclick="switchTab('professional')">Professional</button>
+  </div>
+
+  <h2 id="section-title">Suggested Ainagers</h2>
+
+  <div class="ainager-grid" id="ainager-grid">
+    <div class="empty-state">Loading...</div>
+  </div>
+
+  <div class="search-box">
+    <input type="text" id="search-input" placeholder="enter ainager id" />
+    <button onclick="searchAinager()">Search</button>
+  </div>
 </div>
 
-<div id="company-screen" class="container" style="display:none;">
-  <h2>Company Ainager</h2>
-  <button class="btn" onclick="showHomeScreen()">Back</button>
-</div>
+<script>
+// const API_BASE_URL = "https://ainager.com/ainager/";
+// const API_BASE_URL = "http://127.0.0.1:8000/ainager/";
+const API_BASE_URL = "https://4cb4-2405-201-f01a-7006-c54d-ea42-20e0-dbb1.ngrok-free.app/ainager/";
+let telegramUserId = null;
+let userEmail = null;
+let isUserConnected = false;
+let currentTab = 'personal';
+let allAinagers = [];
 
-<div id="connected-screen" class="container" style="display:none;">
-  <h2>Connected Ainagers</h2>
-  <div class="grid" id="connected-list"></div>
-  <button class="btn" onclick="showHomeScreen()">Back</button>
-</div>
+// Hide all screens
+function hideAllScreens() {
+  const screens = ['email-screen', 'otp-screen', 'main-screen'];
+  screens.forEach(screenId => {
+    document.getElementById(screenId).style.display = 'none';
+  });
+}
 
-<div id="others-screen" class="container" style="display:none;">
-  <h2>Other Ainagers</h2>
-  <button class="btn" onclick="showHomeScreen()">Back</button>
-</div>
+// Show main screen
+function showMainScreen() {
+  hideAllScreens();
+  document.getElementById("main-screen").style.display = "block";
+  console.log("🏠 Main screen loaded.");
+  fetchConnectedAinagers();
+}
 
-<script src="script.js"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/eruda"></script> -->
-<!-- <script>
-  // eruda.init();
-</script> -->
+// Show email entry screen
+function showEmailScreen() {
+  hideAllScreens();
+  document.getElementById("email-screen").style.display = "block";
+  console.log("📧 Email screen loaded.");
+}
+
+// Show OTP verification screen
+function showOTPScreen() {
+  hideAllScreens();
+  document.getElementById("otp-screen").style.display = "block";
+  console.log("🔢 OTP screen loaded.");
+}
+
+// Switch between Personal and Professional tabs
+function switchTab(tab) {
+  currentTab = tab;
+  
+  // Update button states
+  document.getElementById('personal-btn').classList.toggle('active', tab === 'personal');
+  document.getElementById('professional-btn').classList.toggle('active', tab === 'professional');
+  
+  // Update section title
+  document.getElementById('section-title').textContent = tab === 'personal' ? 'Connected Ainagers' : 'Professional Ainagers';
+  
+  // Filter and display ainagers
+  displayAinagers();
+}
+
+// Display ainagers based on current tab
+function displayAinagers() {
+  const grid = document.getElementById("ainager-grid");
+  
+  if (allAinagers.length === 0) {
+    grid.innerHTML = '<div class="empty-state">No connected Ainagers found.</div>';
+    return;
+  }
+
+  // For now, show all ainagers in both tabs
+  // You can add filtering logic here based on ainager type
+  const filteredAinagers = allAinagers;
+  
+  if (filteredAinagers.length === 0) {
+    grid.innerHTML = `<div class="empty-state">No ${currentTab} Ainagers found.</div>`;
+    return;
+  }
+
+  grid.innerHTML = '';
+  filteredAinagers.forEach(ainager => {
+    const ainagerElement = document.createElement("div");
+    ainagerElement.className = "ainager";
+    ainagerElement.textContent = ainager.ainager_name;
+    ainagerElement.onclick = () => startAinagerBot(ainager.ainager_name);
+    grid.appendChild(ainagerElement);
+  });
+}
+
+// Search for ainager
+function searchAinager() {
+  const searchInput = document.getElementById("search-input");
+  const searchTerm = searchInput.value.trim();
+  
+  if (!searchTerm) {
+    alert("Please enter an Ainager ID to search");
+    return;
+  }
+  
+  // Open bot with search term
+  startAinagerBot(searchTerm);
+  searchInput.value = '';
+}
+
+// Start Ainager bot
+function startAinagerBot(ainagerName) {
+  const botUsername = "theainager_bot";
+  const url = `https://t.me/${botUsername}?start=connect_${encodeURIComponent(ainagerName)}`;
+  window.open(url, "_blank");
+  console.log(`📤 Opening bot with parameter: ${ainagerName}`);
+}
+
+// Fetch connected Ainagers from API
+async function fetchConnectedAinagers() {
+  if (!telegramUserId) {
+    document.getElementById("ainager-grid").innerHTML = '<div class="empty-state">User ID not available. Please launch via Telegram.</div>';
+    console.warn("❌ Attempted to fetch connections without telegramUserId.");
+    return;
+  }
+
+  console.log(`🔍 Fetching connections for user: ${telegramUserId}`);
+
+  try {
+    const response = await fetch(`${API_BASE_URL}ainager-connections/?user_id=${telegramUserId}`, {
+      headers: {
+        'ngrok-skip-browser-warning': 'true'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch connections: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log("✅ Connection data received from API:", data);
+
+    allAinagers = data.connections || [];
+    displayAinagers();
+  } catch (error) {
+    console.error("⚠️ Error fetching connections:", error);
+    document.getElementById("ainager-grid").innerHTML = '<div class="empty-state">Error loading connections. Please try again later.</div>';
+  }
+}
+
+// Send OTP to email
+async function sendOTP() {
+  const emailInput = document.getElementById("email-input");
+  const email = emailInput.value.trim();
+  const errorDiv = document.getElementById("email-error");
+  const loadingDiv = document.getElementById("email-loading");
+
+  // Clear previous messages
+  errorDiv.textContent = "";
+  
+  if (!email) {
+    errorDiv.textContent = "Please enter your email address";
+    return;
+  }
+
+  if (!isValidEmail(email)) {
+    errorDiv.textContent = "Please enter a valid email address";
+    return;
+  }
+
+  loadingDiv.style.display = "block";
+  userEmail = email;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}send-otp/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      },
+      body: JSON.stringify({
+        email: email,
+        telegram_id: telegramUserId
+      })
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      console.log("✅ OTP sent successfully");
+      showOTPScreen();
+    } else {
+      errorDiv.textContent = data.message || "Failed to send OTP. Please try again.";
+    }
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    errorDiv.textContent = "Network error. Please check your connection and try again.";
+  } finally {
+    loadingDiv.style.display = "none";
+  }
+}
+
+// Verify OTP
+async function verifyOTP() {
+  const otpInputs = document.querySelectorAll('.otp-input');
+  const otp = Array.from(otpInputs).map(input => input.value).join('');
+  const errorDiv = document.getElementById("otp-error");
+  const loadingDiv = document.getElementById("otp-loading");
+
+  // Clear previous messages
+  errorDiv.textContent = "";
+
+  if (otp.length !== 6) {
+    errorDiv.textContent = "Please enter all 6 digits";
+    return;
+  }
+
+  loadingDiv.style.display = "block";
+
+  try {
+    const response = await fetch(`${API_BASE_URL}verify-otp/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      },
+      body: JSON.stringify({
+        email: userEmail,
+        otp: otp,
+        telegram_id: telegramUserId
+      })
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      console.log("✅ OTP verified successfully");
+      isUserConnected = true;
+      showMainScreen();
+    } else {
+      errorDiv.textContent = data.message || "Invalid OTP. Please try again.";
+      // Clear OTP inputs
+      otpInputs.forEach(input => input.value = "");
+      otpInputs[0].focus();
+    }
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    errorDiv.textContent = "Network error. Please check your connection and try again.";
+  } finally {
+    loadingDiv.style.display = "none";
+  }
+}
+
+// Resend OTP
+async function resendOTP() {
+  if (!userEmail) {
+    showEmailScreen();
+    return;
+  }
+
+  const errorDiv = document.getElementById("otp-error");
+  errorDiv.textContent = "";
+
+  try {
+    const response = await fetch(`${API_BASE_URL}send-otp/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      },
+      body: JSON.stringify({
+        email: userEmail,
+        telegram_id: telegramUserId
+      })
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      console.log("✅ OTP resent successfully");
+      // Clear OTP inputs
+      const otpInputs = document.querySelectorAll('.otp-input');
+      otpInputs.forEach(input => input.value = "");
+      otpInputs[0].focus();
+    } else {
+      errorDiv.textContent = data.message || "Failed to resend OTP. Please try again.";
+    }
+  } catch (error) {
+    console.error("Error resending OTP:", error);
+    errorDiv.textContent = "Network error. Please check your connection and try again.";
+  }
+}
+
+// Move to next OTP input
+function moveToNext(current, index) {
+  if (current.value.length === 1 && index < 5) {
+    const nextInput = document.querySelectorAll('.otp-input')[index + 1];
+    nextInput.focus();
+  }
+}
+
+// Validate email format
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// Check if user is connected
+async function checkUserConnection() {
+  if (!telegramUserId) {
+    console.warn("No telegram user ID available");
+    showEmailScreen();
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}check-telegram-id/?telegram_id=${telegramUserId}`, {
+      headers: {
+        'ngrok-skip-browser-warning': 'true'
+      }
+    });
+
+    const data = await response.json();
+    
+    if (response.ok && data.exists) {
+      console.log("✅ User is connected");
+      isUserConnected = true;
+      showMainScreen();
+    } else {
+      console.log("❌ User is not connected");
+      isUserConnected = false;
+      showEmailScreen();
+    }
+  } catch (error) {
+    console.error("Error checking user connection:", error);
+    // Show email screen as fallback
+    showEmailScreen();
+  }
+}
+
+function checkTelegramId(userId) {
+  console.log("checkTelegramId received:", userId);
+}
+
+function initializeApp() {
+  console.log("initializeApp started.");
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  telegramUserId = urlParams.get('user_id');
+  console.log("URL user_id:", telegramUserId);
+
+  if (window.Telegram && window.Telegram.WebApp) {
+    console.log("Telegram.WebApp object found!");
+    window.Telegram.WebApp.ready();
+    console.log("✅ Telegram WebApp is ready.");
+
+    const initData = window.Telegram.WebApp.initDataUnsafe;
+    console.log("initDataUnsafe: ", initData);
+
+    if (initData && initData.user) {
+      telegramUserId = initData.user.id;
+      console.log(`✅ Telegram User ID retrieved: ${telegramUserId}`);
+      checkTelegramId(telegramUserId);
+    } else {
+      console.error("❌ No Telegram user data in initDataUnsafe.");
+    }
+  } else if (window.TelegramWebviewProxy) {
+    console.log("TelegramWebviewProxy object found!");
+
+    try {
+      const urlParams = new URLSearchParams(window.location.hash.substring(1));
+      let initDataParam = urlParams.get('tgWebAppData');
+
+      if (!initDataParam) {
+        const queryStringParams = new URLSearchParams(window.location.search);
+        initDataParam = queryStringParams.get('tgWebAppData');
+      }
+
+      if (initDataParam) {
+        const decodedInitData = decodeURIComponent(initDataParam);
+        console.log("Decoded tgWebAppData:", decodedInitData);
+
+        const dataParts = new URLSearchParams(decodedInitData);
+        const userString = dataParts.get('user');
+
+        if (userString) {
+          const user = JSON.parse(userString);
+          telegramUserId = user.id;
+          console.log(`✅ Telegram User ID retrieved (via proxy & URL): ${telegramUserId}`);
+          checkTelegramId(telegramUserId);
+        } else {
+          console.error("❌ TelegramWebviewProxy found, but no user data in URL initData.");
+        }
+      } else {
+        console.error("❌ TelegramWebviewProxy found, but no tgWebAppData in URL.");
+      }
+    } catch (e) {
+      console.error("⚠️ Error parsing initData with TelegramWebviewProxy:", e);
+    }
+  } else {
+    console.error("❌ Telegram WebApp object not available.");
+  }
+
+  // Check user connection status after getting telegram user ID
+  if (telegramUserId) {
+    console.log("checking connection")
+    checkUserConnection();
+  } else {
+    // If no telegram user ID, show email screen
+    showEmailScreen();
+  }
+}
+
+// Call initializeApp when page loads
+window.onload = initializeApp;
+
+// Add keyboard event listeners for OTP inputs
+document.addEventListener('DOMContentLoaded', function() {
+  // Handle backspace for OTP inputs
+  document.addEventListener('keydown', function(e) {
+    if (e.target.classList.contains('otp-input') && e.key === 'Backspace') {
+      const inputs = document.querySelectorAll('.otp-input');
+      const currentIndex = Array.from(inputs).indexOf(e.target);
+      
+      if (e.target.value === '' && currentIndex > 0) {
+        inputs[currentIndex - 1].focus();
+      }
+    }
+  });
+  
+  // Handle Enter key for search
+  document.addEventListener('keydown', function(e) {
+    if (e.target.id === 'search-input' && e.key === 'Enter') {
+      searchAinager();
+    }
+  });
+});
+</script>
+
 </body>
 </html>
