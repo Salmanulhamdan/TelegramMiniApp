@@ -1,4 +1,6 @@
-const API_BASE_URL = "https://ainager.com/ainager/";
+// const API_BASE_URL = "https://ainager.com/ainager/";
+// const API_BASE_URL = "http://127.0.0.1:8000/ainager/";
+const API_BASE_URL="https://4cb4-2405-201-f01a-7006-c54d-ea42-20e0-dbb1.ngrok-free.app/ainager/"
 let telegramUserId = null; // This is your global variable
 
 // Hide all screens
@@ -27,6 +29,13 @@ function showScreen(screenName) {
   }
 }
 
+
+function startAinagerBot(ainagerName) {
+  const botUsername = "theainager_bot"; // replace this with your actual bot username
+  const url = `https://t.me/${botUsername}?start=connect_${encodeURIComponent(ainagerName)}`;
+  window.open(url, "_blank");
+  console.log(`📤 Opening bot with parameter: ${ainagerName}`);
+}
 // Fetch connected Ainagers from API
 function fetchConnectedAinagers() {
   const list = document.getElementById("connected-list");
@@ -42,7 +51,13 @@ function fetchConnectedAinagers() {
   // alert(`🔍 Fetching connections for user: ${telegramUserId}`); // Removed alert
   console.log(`🔍 Fetching connections for user: ${telegramUserId}`); // Added console log
 
-  fetch(`${API_BASE_URL}ainager-connections/?user_id=${telegramUserId}`)
+  console.log(`${API_BASE_URL}ainager-connections/?user_id=${telegramUserId}`,"API_BASE_URL");
+
+  fetch(`${API_BASE_URL}ainager-connections/?user_id=${telegramUserId}`,{
+    headers: {
+      'ngrok-skip-browser-warning': 'true'
+    }
+  })
     .then(response => {
       console.log(`API Response Status: ${response.status}`); // Log status
       if (!response.ok) {
@@ -62,9 +77,17 @@ function fetchConnectedAinagers() {
       }
 
       data.connections.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = `${item.ainager_name} (ID: ${item.ainager_id})`;
-        list.appendChild(li);
+        const card = document.createElement("div");
+        card.className = "connected-card";
+      
+        const nameDiv = document.createElement("div");
+        nameDiv.className = "ainager-name";
+        nameDiv.textContent = item.ainager_name;
+      
+        card.appendChild(nameDiv);
+        card.onclick = () => startAinagerBot(item.ainager_name);
+      
+        list.appendChild(card);
       });
       console.log("Ainagers list populated."); // Log success
     })
@@ -82,6 +105,11 @@ function checkTelegramId(userId) {
 
 function initializeApp() {
   console.log("initializeApp started.");
+  console.log("testing the url params");
+
+  const urlParams = new URLSearchParams(window.location.search);
+  telegramUserId = urlParams.get('user_id');
+  console.log(userId,"userId");
 
   if (window.Telegram && window.Telegram.WebApp) {
     console.log("Telegram.WebApp object found!");
