@@ -1,10 +1,11 @@
 
 // const API_BASE_URL = "https://ainager.com/ainager/";
 // const API_BASE_URL = "http://127.0.0.1:8000/ainager/";
-const API_BASE_URL = "https://4cb4-2405-201-f01a-7006-c54d-ea42-20e0-dbb1.ngrok-free.app/ainager/";
+const API_BASE_URL = "https://4a90b6132361.ngrok-free.app/ainager/";
 let telegramUserId = null;
 let userEmail = null;
 let isUserConnected = false;
+
 
 // Hide all screens
 function hideAllScreens() {
@@ -43,6 +44,7 @@ function showOTPScreen() {
   document.getElementById("otp-screen").style.display = "block";
   console.log("🔢 OTP screen loaded.");
 }
+
 
 // Send OTP to email
 async function sendOTP() {

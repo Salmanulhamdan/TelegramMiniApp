@@ -317,7 +317,7 @@
   </div>
   
   <button class="btn btn-primary" onclick="verifyOTP()">Verify OTP</button>
-  <div class="resend-link" onclick="resendOTP()">Resend OTP</div>
+  <!-- <div class="resend-link" onclick="resendOTP()">Resend OTP</div> -->
   <div id="otp-error" class="error-message"></div>
   <div id="otp-loading" class="loading" style="display:none;">Verifying...</div>
 </div>
@@ -350,6 +350,11 @@ let userEmail = null;
 let isUserConnected = false;
 let currentTab = 'personal';
 let allAinagers = [];
+let generatedOTP = null;
+
+function generateOTP() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
 
 // Hide all screens
 function hideAllScreens() {
@@ -441,7 +446,7 @@ function searchAinager() {
 
 // Start Ainager bot
 function startAinagerBot(ainagerName) {
-  const botUsername = "theainager_bot";
+  const botUsername = "firstainagerbot";
   const url = `https://t.me/${botUsername}?start=connect_${encodeURIComponent(ainagerName)}`;
   window.open(url, "_blank");
   console.log(`📤 Opening bot with parameter: ${ainagerName}`);
@@ -479,148 +484,132 @@ async function fetchConnectedAinagers() {
   }
 }
 
+async function registerTelegramUser() {
+  try {
+    const response = await fetch(`${API_BASE_URL}register-telegram-user/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      },
+      body: JSON.stringify({
+        telegram_user_id: telegramUserId,
+        email: userEmail
+      })
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      console.log("User registered:", data);
+      isUserConnected = true;
+      showHomeScreen();
+    } else {
+      console.error("Registration failed:", data.message);
+    }
+  } catch (error) {
+    console.error("Error registering user:", error);
+  }
+}
+
 // Send OTP to email
 async function sendOTP() {
   const emailInput = document.getElementById("email-input");
   const email = emailInput.value.trim();
   const errorDiv = document.getElementById("email-error");
-  const loadingDiv = document.getElementById("email-loading");
 
-  // Clear previous messages
   errorDiv.textContent = "";
-  
-  if (!email) {
-    errorDiv.textContent = "Please enter your email address";
-    return;
-  }
 
   if (!isValidEmail(email)) {
     errorDiv.textContent = "Please enter a valid email address";
     return;
   }
 
-  loadingDiv.style.display = "block";
+  generatedOTP = generateOTP(); // Generate locally
+  console.log("Generated OTP:", generatedOTP);
   userEmail = email;
 
+  // Now call your backend endpoint to send the email — no OTP verification API needed
   try {
-    const response = await fetch(`${API_BASE_URL}send-otp/`, {
+    const response = await fetch(`${API_BASE_URL}send-otp-email/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true'
       },
       body: JSON.stringify({
-        email: email,
-        telegram_id: telegramUserId
+        email: userEmail,
+        otp: generatedOTP
       })
     });
 
-    const data = await response.json();
-    
     if (response.ok) {
-      console.log("✅ OTP sent successfully");
       showOTPScreen();
     } else {
-      errorDiv.textContent = data.message || "Failed to send OTP. Please try again.";
+      const data = await response.json();
+      errorDiv.textContent = data.message || "Failed to send OTP email.";
     }
   } catch (error) {
-    console.error("Error sending OTP:", error);
-    errorDiv.textContent = "Network error. Please check your connection and try again.";
-  } finally {
-    loadingDiv.style.display = "none";
+    console.error("Error sending OTP email:", error);
+    errorDiv.textContent = "Network error. Please try again.";
   }
 }
 
 // Verify OTP
-async function verifyOTP() {
+function verifyOTP() {
   const otpInputs = document.querySelectorAll('.otp-input');
-  const otp = Array.from(otpInputs).map(input => input.value).join('');
+  const enteredOTP = Array.from(otpInputs).map(input => input.value).join('');
   const errorDiv = document.getElementById("otp-error");
-  const loadingDiv = document.getElementById("otp-loading");
 
-  // Clear previous messages
-  errorDiv.textContent = "";
-
-  if (otp.length !== 6) {
-    errorDiv.textContent = "Please enter all 6 digits";
+  if (enteredOTP !== generatedOTP) {
+    errorDiv.textContent = "Invalid OTP. Please try again.";
+    otpInputs.forEach(input => input.value = "");
+    otpInputs[0].focus();
     return;
   }
 
-  loadingDiv.style.display = "block";
-
-  try {
-    const response = await fetch(`${API_BASE_URL}verify-otp/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true'
-      },
-      body: JSON.stringify({
-        email: userEmail,
-        otp: otp,
-        telegram_id: telegramUserId
-      })
-    });
-
-    const data = await response.json();
-    
-    if (response.ok) {
-      console.log("✅ OTP verified successfully");
-      isUserConnected = true;
-      showMainScreen();
-    } else {
-      errorDiv.textContent = data.message || "Invalid OTP. Please try again.";
-      // Clear OTP inputs
-      otpInputs.forEach(input => input.value = "");
-      otpInputs[0].focus();
-    }
-  } catch (error) {
-    console.error("Error verifying OTP:", error);
-    errorDiv.textContent = "Network error. Please check your connection and try again.";
-  } finally {
-    loadingDiv.style.display = "none";
-  }
+  // If OTP matches — register user via API
+  registerTelegramUser();
 }
 
 // Resend OTP
-async function resendOTP() {
-  if (!userEmail) {
-    showEmailScreen();
-    return;
-  }
+// async function resendOTP() {
+//   if (!userEmail) {
+//     showEmailScreen();
+//     return;
+//   }
 
-  const errorDiv = document.getElementById("otp-error");
-  errorDiv.textContent = "";
+//   const errorDiv = document.getElementById("otp-error");
+//   errorDiv.textContent = "";
 
-  try {
-    const response = await fetch(`${API_BASE_URL}send-otp/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true'
-      },
-      body: JSON.stringify({
-        email: userEmail,
-        telegram_id: telegramUserId
-      })
-    });
+//   try {
+//     const response = await fetch(`${API_BASE_URL}send-otp/`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'ngrok-skip-browser-warning': 'true'
+//       },
+//       body: JSON.stringify({
+//         email: userEmail,
+//         telegram_id: telegramUserId
+//       })
+//     });
 
-    const data = await response.json();
+//     const data = await response.json();
     
-    if (response.ok) {
-      console.log("✅ OTP resent successfully");
-      // Clear OTP inputs
-      const otpInputs = document.querySelectorAll('.otp-input');
-      otpInputs.forEach(input => input.value = "");
-      otpInputs[0].focus();
-    } else {
-      errorDiv.textContent = data.message || "Failed to resend OTP. Please try again.";
-    }
-  } catch (error) {
-    console.error("Error resending OTP:", error);
-    errorDiv.textContent = "Network error. Please check your connection and try again.";
-  }
-}
+//     if (response.ok) {
+//       console.log("✅ OTP resent successfully");
+//       // Clear OTP inputs
+//       const otpInputs = document.querySelectorAll('.otp-input');
+//       otpInputs.forEach(input => input.value = "");
+//       otpInputs[0].focus();
+//     } else {
+//       errorDiv.textContent = data.message || "Failed to resend OTP. Please try again.";
+//     }
+//   } catch (error) {
+//     console.error("Error resending OTP:", error);
+//     errorDiv.textContent = "Network error. Please check your connection and try again.";
+//   }
+// }
 
 // Move to next OTP input
 function moveToNext(current, index) {
